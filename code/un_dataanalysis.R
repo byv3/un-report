@@ -90,9 +90,29 @@ full_join(co2_emissions, gapminder_data_2007)
 # Writing a CSV
 write_csv(joined_co2_pop, file = "data/joined_co2_pop.csv")
 
+# Read back in the CSV file we just wrote
 
+joined_pop_co2<-read_csv("data/joined_co2_pop.csv")
+# If you have time, consider how to ggplot your data
+# Create a histogram for both gdpPercap and LifeExp, separately, to explore those variables distributions
 
+joined_pop_co2%>%
+  ggplot(aes(x = gdpPercap))+
+  geom_histogram()
+# Find help pages on theme() function to change axis titles font and size
 
+gdp_co2_plot <- joined_pop_co2%>%
+  ggplot(aes(x = gdpPercap, y = per_capita_emissions))+
+  geom_point()+
+  geom_smooth(method = "lm", se = FALSE)+
+  labs(x = "GDP Per Capita", y = "CO2 Emissions Per Capita (metric tons)",
+       title = "Comparing Per Capita CO2 emissions and GDP")+
+  theme_classic()+
+  ggpubr::stat_regline_equation(aes(label = after_stat(rr.label)))
+
+ggsave(gdp_co2_plot, filename = "figures/gdp_vs_co2_plot.png", 
+       height = 4, width = 6, units = "in",
+       dpi = 300)
 
 
 
